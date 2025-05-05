@@ -40,7 +40,7 @@
             "type": "pickString",
             "description": "Select library",
             "default": "",
-            "options": []
+            "options": ["vue-example"]
         },
         {
             "description": "Version of the library",

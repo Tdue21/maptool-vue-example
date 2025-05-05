@@ -1,0 +1,14 @@
+{
+  "namespace": "dovesoft.vue-example",
+  "authors": [
+    "tdue21"
+  ],
+  "allowsUriAccess": true,
+  "website": "",
+  "gitUrl": "",
+  "version": "0.1",
+  "name": "vue-example",
+  "description": "An example library using Vue.js in a html 5 context.",
+  "license": "None",
+  "shortDescription": "A Vue.js example for MapTool"
+}

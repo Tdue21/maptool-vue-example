@@ -1,0 +1,8 @@
+{
+  "events": [
+    {
+      "name": "onInit",
+      "mts": "events/onInit"
+    }
+  ]
+}

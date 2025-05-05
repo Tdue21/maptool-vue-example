@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="./js/lib/vue.global-3.5.13.js"></script>
+</head>
+
+<style>
+    .selector {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        gap: 5px;
+    }
+
+    .properties {
+        margin: 5px;
+        width: calc(100% - 15px);
+        display: grid;
+        grid-template-columns: 1fr 3fr 0.5fr 0.5fr;
+        grid-template-rows: repeat(auto-fill, minmax(25px, 1fr));
+        gap: 5px;
+    }
+</style>
+
+<body>
+
+    <div id="app">
+        <div>
+            <h1>Token Selection</h1>
+            <div class="selector">
+                <label>Select Token</label>
+                <select v-model="selectedToken">
+                    <option v-for="token in tokens" :value="token.id">{{ token.name }}</option>
+                </select>
+                <button @click="loadTokenProperties(selectedToken)">Load Token Properties</button>
+            </div>
+        </div>
+
+        <div>
+            <h1>Token Properties</h1>
+            <div v-for="property in selectedTokenProperties" :key="property.id" class="properties">
+                <label>{{ property.name }}</label>
+                <input type="text" v-model="property.value" />
+                <button @click="updateProperty(property)">Set</button>
+                <button @click="resetProperty(property)">Reset</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    "use strict";
+
+    function handleException(error) {
+        console.log("An error occurred: " + error.message + "\n" + error.stack);
+    }
+
+    async function evaluateMacro(macro) {
+        try {
+            let uri = "macro:EvaluateMacro@lib:dovesoft.vue-example";
+            let r = await fetch(uri, { method: "POST", body: macro });
+            let result = await r.text();
+            return result;
+
+        } catch (error) {
+            handleException(error);
+        }
+    }
+
+
+    const app = Vue.createApp({
+        data() {
+            return {
+                tokens: [],
+                selectedToken: null,
+                selectedTokenProperties: [],
+            }
+
+        },
+        methods: {
+
+            async loadTokens() {
+                try {
+                    let tokens = [];
+                    const response = await evaluateMacro(`[r:getTokens("json")]`);
+                    const tokenIds = JSON.parse(response);
+                    for (const tokenId of tokenIds) {
+                        const name = await evaluateMacro(`[r:getName("${tokenId}")]`);
+                        tokens.push({ id: tokenId, name: name });
+                    }
+                    this.tokens = tokens;
+
+                    let data = await evaluateMacro(`[r:getSelected("json")]`);
+                    let selected = JSON.parse(data);
+                    if(selected.length > 0) {
+                        this.selectedToken = selected[0];
+                        this.loadTokenProperties(this.selectedToken);
+                    }
+
+                } catch (error) {
+                    handleException(error);
+                }
+            },
+
+            async loadTokenProperties(tokenId) {
+                try {
+                    const response = await evaluateMacro(`[r:getPropertyNames("json", "${tokenId}")]`);
+                    const names = JSON.parse(response);
+                    let properties = [];
+                    for (const name of names) {
+                        const value = await evaluateMacro(`[r:getProperty("${name}", "${tokenId}")]`);
+                        properties.push({ name: name, value: value });
+                    }
+                    this.selectedTokenProperties = properties;
+
+                } catch (error) {
+                    handleException(error);
+                }
+            },
+
+            async updateProperty(property) {
+                try {
+                    await evaluateMacro(`[r:setProperty("${property.name}", "${property.value}", "${this.selectedToken}")]`);
+                } catch (error) {
+                    handleException(error);
+                }
+            },
+
+            async resetProperty(property) {
+                try {
+                    await evaluateMacro(`[r:resetProperty("${property.name}", "${this.selectedToken}")]`);
+                } catch (error) {
+                    handleException(error);
+                }
+            }
+        },
+
+        mounted() {
+            this.loadTokens();
+        }
+    });
+
+    app.mount("#app");
+</script>
