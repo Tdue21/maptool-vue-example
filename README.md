@@ -55,7 +55,7 @@ But beyond that, it actually also do have a bit of functionality.
 It will show *all* properties of a selected token, with the option of
 updating the value of or even *reset*[^1] a property. 
 
-![docs/token-properties.webp]
+![/docs/token-properties.webp](A screenshot of the Token Properties dialog.)
 
 [^1]: [According to the wiki](https://wiki.rptools.info/index.php/resetProperty) `resetProperty` will reset the value of the property to campaign default, *or* delete the property entirely, if it is not a campaign property. 
 
