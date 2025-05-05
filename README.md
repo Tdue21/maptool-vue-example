@@ -53,9 +53,12 @@ inside a html5 / javascript context in MapTool.
 
 But beyond that, it actually also do have a bit of functionality. 
 It will show *all* properties of a selected token, with the option of
-updating the value of or even *reset*[^1] a property. 
+updating the value of or even *reset* [^1] a property. 
 
 ![A screenshot of the Token Properties dialog.](/docs/token-properties.webp)
+
+I haven't done anything to spice the visual up in any way. Feel free to appropriate the library and make it your own :wink:
+
 
 [^1]: [According to the wiki](https://wiki.rptools.info/index.php/resetProperty) `resetProperty` will reset the value of the property to campaign default, *or* delete the property entirely, if it is not a campaign property. 
 
