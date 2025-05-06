@@ -6,7 +6,7 @@
   "allowsUriAccess": true,
   "website": "",
   "gitUrl": "",
-  "version": "0.1",
+  "version": "0.2",
   "name": "vue-example",
   "description": "An example library using Vue.js in a html 5 context.",
   "license": "None",
